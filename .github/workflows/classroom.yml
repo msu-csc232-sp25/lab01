@@ -1,0 +1,71 @@
+name: Autograding Tests
+'on':
+  - push
+  - repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: task1_test
+        id: task1_test
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: task1_test
+          setup-command: 'cmake -B ./build && cmake --build ./build --target task1_test'
+          command: ./build/task1_test
+          timeout: 10
+          max-score: 1
+      - name: task2_test
+        id: task2_test
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: task2_test
+          setup-command: 'cmake -B ./build && cmake --build ./build --target task2_test'
+          command: ./build/task2_test
+          timeout: 10
+          max-score: 1
+      - name: task3_test
+        id: task3_test
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: task3_test
+          setup-command: 'cmake -B ./build && cmake --build ./build --target task3_test'
+          command: ./build/task3_test
+          timeout: 10
+          max-score: 1
+#      - name: task4_test
+#        id: task4_test
+#        uses: classroom-resources/autograding-command-grader@v1
+#        with:
+#          test-name: task4_test
+#          setup-command: 'cmake -B ./build && cmake --build ./build --target task4_test'
+#          command: ./build/task4_test
+#          timeout: 10
+#          max-score: 1
+#      - name: task5_test
+#        id: task5_test
+#        uses: classroom-resources/autograding-command-grader@v1
+#        with:
+#          test-name: task5_test
+#          setup-command: 'cmake -B ./build && cmake --build ./build --target task5_test'
+#          command: ./build/task5_test
+#          timeout: 10
+#          max-score: 1
+      - name: Autograding Reporter
+        uses: classroom-resources/autograding-grading-reporter@v1
+        env:
+          TASK1_TEST_RESULTS: "${{steps.task1_test.outputs.result}}"
+          TASK2_TEST_RESULTS: "${{steps.task2_test.outputs.result}}"
+          TASK3_TEST_RESULTS: "${{steps.task3_test.outputs.result}}"
+#          TASK4_TEST_RESULTS: "${{steps.task4_test.outputs.result}}"
+#          TASK5_TEST_RESULTS: "${{steps.task5_test.outputs.result}}"
+        with:
+          runners: task1_test,task2_test,task3_test
+#          runners: task1_test,task2_test,task3_test,task4_test,task5_test
