@@ -1,0 +1,19 @@
+@startuml
+'https://plantuml.com/class-diagram
+package csc232 {
+class DynamicArray< T > << thing >> {
+- data_ : T*
+- size_ : size_t
+- capacity_ : size_t
++ DynamicArray()
++ DynamicArray(data : const T[], size : size_t, capacity : size_t)
++ DynamicArray(other : const DynamicArray&)
++ ~DynamicArray()
++ operator=(other : const DynamicArray&) : DynamicArray&
++ operator[](index : int) const : const T &;
++ operator[](index : int) : T &
++ size() const : size_t
++ capacity() const : size_t
+}
+}
+@enduml

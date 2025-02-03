@@ -3,7 +3,6 @@ set(IS_HW FALSE)
 set(CSC232_PROJECT_TYPE "lab")
 if(IS_HW)
     set(CSC232_PROJECT_TYPE "hw")
-    # TODO: Don't forget to uncomment tasks 4&5 in classroom.yml
     message("TODO: Don't forget to uncomment tasks 4&5 in classroom.yml")
 endif()
 
@@ -40,11 +39,16 @@ message("CMAKE_CXX_FLAGS =${CMAKE_CXX_FLAGS}")
 set(CMAKE_CXX_STANDARD 17)
 
 # Source sets for targets
-set(SRC_MAIN_FILES src/main/cpp/main.cpp)
-set(SRC_DEMO_FILES src/main/cpp/demo.cpp)
-set(SRC_TASK1_TEST_FILES src/test/cpp/task1_test.cpp)
-set(SRC_TASK2_TEST_FILES src/test/cpp/task2_test.cpp)
-set(SRC_TASK3_TEST_FILES src/test/cpp/task3_test.cpp)
+set(SRC_MAIN_FILES src/main/cpp/main.cpp
+        src/main/cpp/expanded_templates.cpp)
+set(SRC_DEMO_FILES src/main/cpp/demo.cpp
+        src/main/cpp/expanded_templates.cpp)
+set(SRC_TASK1_TEST_FILES src/test/cpp/task1_test.cpp
+        src/main/cpp/expanded_templates.cpp)
+set(SRC_TASK2_TEST_FILES src/test/cpp/task2_test.cpp
+        src/main/cpp/expanded_templates.cpp)
+set(SRC_TASK3_TEST_FILES src/test/cpp/task3_test.cpp
+        src/main/cpp/expanded_templates.cpp)
 
 # Setup Google Test
 set(GOOGLE_TEST_ARCHIVE "v1.14.0")
@@ -69,6 +73,12 @@ add_executable(task3_test ${SRC_TASK3_TEST_FILES})
 target_link_libraries(task1_test GTest::gtest_main)
 target_link_libraries(task2_test GTest::gtest_main)
 target_link_libraries(task3_test GTest::gtest_main)
+
+# Google unit tests will run valgrind against the demo target so
+# make it a dependency to ensure it's properly built
+add_dependencies(task1_test demo)
+add_dependencies(task2_test demo)
+add_dependencies(task3_test demo)
 
 include(GoogleTest)
 gtest_discover_tests(task1_test)

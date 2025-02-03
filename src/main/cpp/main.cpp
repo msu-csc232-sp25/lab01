@@ -8,12 +8,12 @@
  * @version 1.0.0
  * @date    01/01/2025
  *
- * @copyright Copyright (c) 202 James R. Daehn
+ * @copyright Copyright (c) 2025 James R. Daehn
  */
 
 #include "csc232.h"
 
-int main(int argc, char *argv[]) {
+int main(const int argc, char *argv[]) {
     std::cout << "Hello, Main Target!" << std::endl;
     // we subtract one from argc because it includes the name of the executable itself
     std::cout << "This program was launched with " << (argc - 1) << " command line arguments." << std::endl;
@@ -25,5 +25,6 @@ int main(int argc, char *argv[]) {
         }
         std::cout << std::endl;
     }
+
     return EXIT_SUCCESS;
 }

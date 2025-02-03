@@ -1,31 +1,52 @@
-# LHWn - Title
+# LAB01 - Dynamic Arrays
 
-_A quick blurb or sub-title text_
+This lab explores techniques for creating "dynamic" arrays that can be resized at runtime. This is done by declaring pointers to blocks of memory. These pointers behave exactly like arrays and can be used as such.
 
 ## Background
 
 Before proceeding with this lab, the student should take the time to read
 
-* this
-* that
-* and the other thing
+* Section C2.7 in [C++ Interlude 2 Memory Allocation, Pointers, and Polymorphism](https://msu.vitalsource.com/reader/books/9780138122782/epubcfi/6/104%5B%3Bvnd.vst.idref%3DP70010183410000000000000000013F2%5D!/4/2%5BP70010183410000000000000000013F2%5D/2/2%5BP70010183410000000000000000013F3%5D/3:15%5Bcat%2Cion%5D)
+* Section 1.5.6 The Big-Five in the "Weiss" textbook
+
+Recall the "Weiss" textbook is located in our Textbook course module, "Data Structures and Algorithm Analysis with C++", 4th Edition, by Mark Allen Weiss.
+
+### Modeling a dynamic array
+
+In this lab, we shall create a simple "wrapper" class that provides us with an object-oriented, dynamic array. Figure 1 displays the UML diagram for this simple model.
+
+![DynamicArray Class Diagram](images/dynamic-array.png)
+
+
+###### Figure 1: The `DynamicArray` class
+
+Specifically, you'll focus on properly implementing constructors and destructors, including the copy constructor, as well as a new operator override, namely the `operator+` so that we can create new `DynamicArray` objects by "adding" two of them together using the `+` operator. For example:
+
+```c++
+// assuming a and b are existing DynamicArray<int> objects
+csc232::DynamicArray<int> sum = a + b;
+```
+
+The result of this operation is a new `DynamicArray` that contains all the elements from `a` and all the elements from `b`. 
+
+**Note**: The `csc232` namespace also defines a `constexpr` named `DEFAULT_CAPACITY`. This value corresponds to the default (initial) capacity for a `DynamicArray` object. Code defined within the `csc232` namespace can reference this constant by the `DEFAULT_CAPACITY` identifier.
 
 ## Objective
 
 Upon successful completion of this lab, the student has learned how to
 
-* do this
-* do that
-* do another thing
+* model a dynamic array that properly
+   * allocates and deallocates memory upon construction/destruction
+   * allows construction from existing dynamic arrays
+   * allows construction by "adding" two dynamic arrays together
 
 ## Getting Started
 
-After accepting this assignment with the
-provided [GitHub Classroom Assignment link](https://classroom.github.com/fill-me-in), decide how you want to work with
+After accepting this assignment with the provided GitHub Classroom Assignment link, decide how you want to work with
 your newly created repository:
 
-- Using Codespaces directly in your web browser that employees the Visual Studio Code online IDE, or
-- Using the IDE of your choice on your local machine
+* Using Codespaces directly in your web browser that employees the Visual Studio Code online IDE, or
+* Using the IDE of your choice on your local machine
 
 ### Codespaces
 
@@ -88,35 +109,69 @@ _You may have to type the `q` character to get back to the command line prompt a
 
 ## Tasks
 
-This assignemtn consists of the following tasks:
+This assignment consists of the following tasks:
 
-- Task 1: <TODO: Declare me!>
-- Task 2: <TODO: Declare me!>
-- Task 3: <TODO: Declare me!>
-- Task 4: <TODO: Declare me - or erase me!>
-- Task 5: <TODO: Declare me - or erase me!>
+* Task 1: Creating and destroying a instances of the `DynamicArray` class
+* Task 2: Implement the copy assignment operator for a `DynamicArray`
+* Task 3: Implement `operator+` for `DynamicArray`
+  
+**Note**: In Tasks 1 and 2, each `TODO` comment is located in the [src/](src/main/cpp/DynamicArray.cpp) source file. In Task 3, the `TODO` comment is located in [include/DynamicArray.h](include/DynamicArray.h).
 
-Pol, neuter abactor!
+### Additional System Requirements for local testing
 
-### Task 1: <TODO: Declare me!>
+Since a major concept in this lab is memory management, the unit tests that verify the correctness of your solutions utilize a program named `valgrind`. Unfortunately, this program is not installed, by default, on our Codespaces. Also, this program is only available for Linux operating systems. Fortunately, our Codespaces are Ubuntu distributions of Linux, meaning, we _can_ install `valgrind`. Enter the following commands in the terminal (console) window:
 
-Ecce, urbs!
+```bash
+sudo apt update && sudo apt install valgrind
+```
 
-### Task 2: <TODO: Declare me!>
+If you are uncomfortable doing this, you can still see the results of the unit tests when the GitHub workflow executes on your pushes.
 
-Ubi est dexter medicina?
+### Task 1: Creating and destroying instances of the `DynamicArray` class
 
-### Task 3: <TODO: Declare me!>
+❌ Before you make any changes, be sure you're working a new branch named `develop`!
 
-Ubi est dexter medicina?
+1. Locate the `TEST_TASK1` macro definition in the [include/csc232.h](include/csc232.h) header file and toggle it from `FALSE` to `TRUE`.
+2. Locate the `TODO: Task 1a` comment and initialize the data members of the `DynamicArray` class accordingly.
+3. Locate the `TODO: Task 1b` comment and free any dynamically allocated resources accordingly.
+4. Locate the `TODO: Task 1c` comment and implement the copy constructor accordingly. Recall, your goal here is to make a _deep_ copy of the source object's attributes.
+5. Verify your results by executing the `task1_test` target.
+6. Once your happy with the results of the unit tests, stage, commit, and push your changes to GitHub.
 
-### Task 4: <TODO: Declare me!>
+### Task 2: Implement the copy assignment operator for the `DynamicArray` class
 
-Ubi est dexter medicina?
+Task 2 is similar in nature to Task 1c, with the additional concern that destination object must ensure it has the capacity to make a _deep_ copy of the source object's attributes.
 
-### Task 5: <TODO: Declare me!>
+1. Locate the `TEST_TASK2` macro definition in the [include/csc232.h](include/csc232.h) header file and toggle it from `FALSE` to `TRUE`.
+2. Locate the `TODO: Task 2` comment and implement the copy assignment operator of the `DynamicArray` class accordingly.
+3. Verify your results by executing the `task2_test` target.
+4. Once your happy with the results of the unit tests, stage, commit, and push your changes to GitHub.
 
-Ubi est dexter medicina?
+### Task 3: Implement `operator+` for the `DynamicArray` class
+
+Task 3 has similar concerns regarding target storage capacity. Here, you are essentially copying data from two source dynamic arrays objects.
+
+There is an interesting design for the implementation of the `operator+` operator. We use a _non-member_ function to realize the proper functionality. This function is **not** a member of the `DynamicArray` class. It merely takes as parameters, two constant references to them. That is to say, 
+
+```c++
+// Assuming csc131_students aned csc232_students are two 
+// DynamicArray<std::string> objects populated with data
+csc232::DynamicArray<std::string> names;
+names = csc131_students + csc232_students;
+```
+is equivalent to
+
+```c++
+csc232::DynamicArray<std::string> names;
+ names = csc232::operator+(csc131_students, csc232_students);
+```
+
+Thus, we see how overloading the `operator+` provides us with a much cleaner syntax for handling such scenarios that apply.
+
+1. Locate the `TEST_TASK3` macro definition in the [include/csc232.h](include/csc232.h) header file and toggle it from `FALSE` to `TRUE`.
+2. Locate the `TODO: Task 3` comment and implement the "+" operator of the `DynamicArray` class accordingly.
+3. Verify your results by executing the `task3_test` target.
+4. Once your happy with the results of the unit tests, stage, commit, and push your changes to GitHub.
 
 ## Submission Details
 
@@ -152,7 +207,7 @@ be granted for this oversight**.
 
 ### Due Date
 
-Your assignment submission is due by 11:59 PM, Saturday....
+Your assignment submission is due by the end of the lab period.
 
 ### Grading Rubric
 
