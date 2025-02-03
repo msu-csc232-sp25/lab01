@@ -12,45 +12,36 @@
  */
 
 #include "csc232.h"
+#include "DynamicArray.h"
 
-int main(int argc, char *argv[]) {
-    std::cout << "Hello, Demo Target!" << std::endl;
-    std::cout << "Check out this UUID: " << csc232::generate_uuid() << std::endl;
-    std::cout << "And another UUID:    " << csc232::generate_uuid() << std::endl;
-#if EXECUTE_PREAMBLE
-    return csc232::preamble(argc, argv);
-#else
-    return EXIT_SUCCESS;
+int main() {
+#if TEST_TASK1
+    const csc232::DynamicArray<int> dynamic_array;
+    cout << "dynamic_array.size() = " << dynamic_array.size() << endl;
+    cout << "dynamic_array.capacity() = " << dynamic_array.capacity() << endl;
+    cout << "dynamic_array = " << dynamic_array << endl;
 #endif
 
-}
+#if TEST_TASK2
+    // Work with copy constructor
+    int data[] = {100, 200, 300, 400, 500, 600, 700, 800, 900, 1000};
+    size_t size = std::size(data);
+    size_t capacity = std::size(data);
 
-int csc232::preamble(int argc, char *argv[]) {
-    // An input file to process
-    std::string input_file;
+    const csc232::DynamicArray src{data, size, capacity};
+    const csc232::DynamicArray dst{src};
+    cout << "src.size() = " << src.size() << endl;
+    cout << "src.capacity() = " << src.capacity() << endl;
+    cout << "dst.size() = " << dst.size() << endl;
+    cout << "dst.capacity() = " << dst.capacity() << endl;
+    cout << "src = " << src << endl;
+    cout << "dst = " << dst << endl;
+#endif
 
-    // Check to see if the user has supplied a specific input file for consumption
-    if (argc > 1) {
-        // It is expected as the first argument
-        input_file = argv[1];
-    } else {
-        // Default input file
-        input_file = "demo_data.txt";
-    }
+#if TEST_TASK3
+    // Work wih + operator
+    auto sum = src + dst;
+#endif
 
-    // Open the file for reading
-    std::ifstream data_file{input_file, std::ios::in};
-
-    if (!data_file) {
-        std::cout << "Could not open \"" << input_file << "\"" << std::endl;
-        return EXIT_FAILURE;
-    } else {
-        std::cout << "Successfully opened \"" << input_file << "\"";
-
-        std::cout << "... will now close this file" << std::endl;
-        if (data_file.is_open()) {
-            data_file.close();
-        }
-    }
     return EXIT_SUCCESS;
 }
